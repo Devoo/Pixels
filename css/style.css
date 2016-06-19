@@ -38,14 +38,6 @@ img{ max-width:100%;}
 
 a, a:hover, a:active{ outline:0px !important}
 
-@font-face {
-  font-family: 'FontAwesome';
-  src: url('../fonts/fontawesome-webfont.eot?v=4.1.0');
-  src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.1.0') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff?v=4.1.0') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.1.0') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.1.0#fontawesomeregular') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-
 /* Primary Styles
 ---------------------------------*/
 body {
@@ -80,7 +72,7 @@ h6{
 	font-family: 'Open Sans', sans-serif;
 	font-weight:400;
 	text-align:center;
-	margin:0 0 60px 0;
+	margin:0 0 25px 0;
 }
 p{
 	line-height:24px;
@@ -208,7 +200,7 @@ color: #fff;
 }
 
 .main-section{
-	padding:90px 0 110px;
+	padding:25px 0 50px;
 }
 
 
@@ -835,5 +827,5 @@ border: 2px solid #fff;
 
 .slider.slider-horizontal {
     width: 150px;
-    height: 20px;
+    height: 40px;
 }
