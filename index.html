@@ -1,159 +1,166 @@
-<html>
+<html lang="en">
+
 <head>
-<script src="https://code.jquery.com/jquery-2.2.4.min.js" ></script>
-<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" ></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Devoo - Random Pixels</title>
 
-<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous" />
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
--->
-
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/black-tie/jquery-ui.css" ></link>
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/7.1.0/css/bootstrap-slider.min.css" crossorigin="anonymous" />
 
 
 
-<script type="text/javascript">
- 
- function setPixel(imageData, x, y, r, g, b, a) {
-                index = (x + y * imageData.width) * 4;
-                imageData.data[index+0] = r;
-                imageData.data[index+1] = g;
-                imageData.data[index+2] = b;
-                imageData.data[index+3] = a;
-}
 
-function setPixelWithRadio(imageData, radio, x, y, r, g, b, a) {
-        for(var x1 = 0; x1 < radio; x1++)
-                for(var y1 = 0; y1 < radio; y1++)
-                {
-                        setPixel(imageData, x * radio + x1, y * radio + y1, r, g, b, a);   
-                }
+</head>
 
-}
+<body>
+    <div id="sliderWidth" style="width:100px;"></div>
+    <div id="sliderHeight" style="width:100px;"></div>
+    <div id="sliderColors" style="width:100px;"></div>
+    <div id="sliderPixelSize" style="width:100px;"></div>
+    <input type="checkbox" id="chkColors">With Colors<br>
+    <input type="checkbox" id="chkTimer">Auto Generate<br>
+    <div>
+        <canvas id="canvas" />
+    </div>
 
-function rndInt(max)
-{
-  return Math.floor(Math.random() * (max+1));
-}
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/7.1.0/bootstrap-slider.min.js"></script>
 
-var grayNumber = 4;
-var colors = false;
-var pixelSize = 2;
-var autorefresh;
 
-function createImage() {
-        var canvas = document.getElementById('canvas');
-        var ctx = canvas.getContext('2d');
-        var canvasWidth = $( "#sliderWidth" ).slider("option", "value");
-        var canvasHeight = $( "#sliderHeight" ).slider("option", "value");
-        ctx.canvas.width = canvasWidth * pixelSize;
-        ctx.canvas.height =  canvasHeight * pixelSize;
-        $("#canvas").height(ctx.canvas.height);
-        $("#canvas").width(ctx.canvas.width);
-
-        var cw = canvas.width;
-        var ch = canvas.height;
-        var imageData = ctx.createImageData(cw, ch);
-        
-        for (var x = 0; x < canvasWidth; ++x) {
-           for (var y = 0; y < canvasHeight; ++y) {
-
-                if (colors)
-                {
-                    var r = Math.floor(rndInt(grayNumber) * (255 / grayNumber));
-                    var g = Math.floor(rndInt(grayNumber) * (255 / grayNumber));
-                    var b = Math.floor(rndInt(grayNumber) * (255 / grayNumber));
-                    setPixelWithRadio(imageData, pixelSize, x, y, r, g, b, 255);
-                }
-                else
-                {
-                   var grey = Math.floor(rndInt(grayNumber) * (255 / grayNumber)); 
-                   var r = grey;var g = grey;var b = grey;
-                   setPixelWithRadio(imageData, pixelSize, x, y, r, g, b, 255);
-                }
-                
-
-            }
+    <script type="text/javascript">
+        function setPixel(imageData, x, y, r, g, b, a) {
+            index = (x + y * imageData.width) * 4;
+            imageData.data[index + 0] = r;
+            imageData.data[index + 1] = g;
+            imageData.data[index + 2] = b;
+            imageData.data[index + 3] = a;
         }
-        ctx.putImageData(imageData, 0, 0);
-}
 
-$(document).ready(function() {
+        function setPixelWithRadio(imageData, radio, x, y, r, g, b, a) {
+            for (var x1 = 0; x1 < radio; x1++)
+                for (var y1 = 0; y1 < radio; y1++) {
+                    setPixel(imageData, x * radio + x1, y * radio + y1, r, g, b, a);
+                }
 
- $("#canvas").click(function() {createImage();});
- $( "#sliderWidth" ).slider({
-      min: 5,
-      max: 500,
-      value: 50,
-      change: function( event, ui ) {
-  //              $("#canvas").width(ui.value);
+        }
+
+        function rndInt(max) {
+            return Math.floor(Math.random() * (max + 1));
+        }
+
+        var grayNumber = 4;
+        var colors = false;
+        var pixelSize = 2;
+        var autorefresh;
+
+        function createImage() {
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext('2d');
+            var canvasWidth = $("#sliderWidth").slider("option", "value");
+            var canvasHeight = $("#sliderHeight").slider("option", "value");
+            ctx.canvas.width = canvasWidth * pixelSize;
+            ctx.canvas.height = canvasHeight * pixelSize;
+            $("#canvas").height(ctx.canvas.height);
+            $("#canvas").width(ctx.canvas.width);
+
+            var cw = canvas.width;
+            var ch = canvas.height;
+            var imageData = ctx.createImageData(cw, ch);
+
+            for (var x = 0; x < canvasWidth; ++x) {
+                for (var y = 0; y < canvasHeight; ++y) {
+
+                    if (colors) {
+                        var r = Math.floor(rndInt(grayNumber) * (255 / grayNumber));
+                        var g = Math.floor(rndInt(grayNumber) * (255 / grayNumber));
+                        var b = Math.floor(rndInt(grayNumber) * (255 / grayNumber));
+                        setPixelWithRadio(imageData, pixelSize, x, y, r, g, b, 255);
+                    } else {
+                        var grey = Math.floor(rndInt(grayNumber) * (255 / grayNumber));
+                        var r = grey;
+                        var g = grey;
+                        var b = grey;
+                        setPixelWithRadio(imageData, pixelSize, x, y, r, g, b, 255);
+                    }
+
+
+                }
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        $(document).ready(function() {
+
+            $("#canvas").click(function() {
                 createImage();
-      }
-    });
- 
+            });
+            $("#sliderWidth").slider({
+                min: 5,
+                max: 500,
+                value: 50,
+                change: function(event, ui) {
+                    //              $("#canvas").width(ui.value);
+                    createImage();
+                }
+            });
 
- $( "#sliderHeight" ).slider({
-      min: 5,
-      max: 300,
-      value: 20,
-      change: function( event, ui ) {
-//                $("#canvas").height(ui.value);
-                createImage();
-      }
-    });
- 
 
-$( "#sliderColors" ).slider({
-      min: 2,
-      max: 16,
-      value: 4,
-      change: function( event, ui ) {
-                grayNumber = ui.value;
-                createImage();
-      }
-    });
+            $("#sliderHeight").slider({
+                min: 5,
+                max: 300,
+                value: 20,
+                change: function(event, ui) {
+                    //                $("#canvas").height(ui.value);
+                    createImage();
+                }
+            });
 
-    
-$( "#sliderPixelSize" ).slider({
-      min: 1,
-      max: 16,
-      value: pixelSize,
-      change: function( event, ui ) {
-                pixelSize = ui.value;
-                createImage();
-      }
-    });
 
-    $('#chkColors').change(function() {
+            $("#sliderColors").slider({
+                min: 2,
+                max: 16,
+                value: 4,
+                change: function(event, ui) {
+                    grayNumber = ui.value;
+                    createImage();
+                }
+            });
+
+
+            $("#sliderPixelSize").slider({
+                min: 1,
+                max: 16,
+                value: pixelSize,
+                change: function(event, ui) {
+                    pixelSize = ui.value;
+                    createImage();
+                }
+            });
+
+            $('#chkColors').change(function() {
 
                 colors = $(this).is(":checked");
                 createImage();
-    });
+            });
 
 
-      $('#chkTimer').change(function() {
+            $('#chkTimer').change(function() {
                 if ($(this).is(":checked"))
-                       autorefresh = setInterval(function(){ createImage(); }, 1000);
+                    autorefresh = setInterval(function() {
+                        createImage();
+                    }, 1000);
                 else
-                        clearInterval(autorefresh);
+                    clearInterval(autorefresh);
 
-    });
-createImage();
+            });
+            createImage();
 
 
- });
-
-</script>
-</head>
-<body>
-        <div id="sliderWidth" style="width:100px;"></div>
-        <div id="sliderHeight" style="width:100px;"></div>
-        <div id="sliderColors" style="width:100px;"></div>
-        <div id="sliderPixelSize" style="width:100px;"></div>
-        <input type="checkbox" id="chkColors">With Colors<br>
-        <input type="checkbox" id="chkTimer">Auto Generate<br>
-<div>
-        <canvas id="canvas" />
-</div>
+        });
+    </script>
 </body>
+
 </html>
