@@ -95,10 +95,17 @@
                         Auto Refresh: <input type="checkbox" id="chkTimer">
                 	</div>
             </div>
+
+                <div class="row wow fadeInLeft delay-01s text-center" style="margin-top:5px;">
+                    <div class="col-md-6 col-xs-6">
+                        <button id="btnPrevious" type="button" class="btn btn-default">Previous</button>
+                	</div>
+
+            </div>
         
         </div>
 
-        <div class="row" style="margin-top:15px;">
+        <div class="row" style="margin-top:10px;">
         	<div class="col-md12 wow fadeInUp delay-05s text-center">
                 <canvas id="canvas" />
                 <br/>
@@ -245,7 +252,26 @@ $(window).load(function(){
         var sliderColors;
         var sliderPixelSize;
 
+        var buffer = [];
+        var lastImage;
+        var bufferLength = 30;
+        var bufferIndex = 0;
+        var addToBuffer = function(obj)
+        {
+            buffer[bufferIndex] = obj;
+            bufferIndex = (bufferIndex + 1) % bufferLength;
+        }
+
+        var popFromBuffer = function()
+        {
+            bufferIndex = (bufferIndex - 1) % bufferLength;
+            return buffer[bufferIndex];
+        }
+
         function createImage() {
+            if (lastImage != null)
+               addToBuffer(lastImage);
+
             var canvas = document.getElementById('canvas');
             var ctx = canvas.getContext('2d');
             var canvasWidth = sliderWidth.slider('getValue');
@@ -274,14 +300,26 @@ $(window).load(function(){
                         var b = grey;
                         setPixelWithRadio(imageData, pixelSize, x, y, r, g, b, 255);
                     }
-
-
                 }
             }
             ctx.putImageData(imageData, 0, 0);
+            lastImage = imageData;   
         }
 
         $(document).ready(function() {
+
+            $("#btnPrevious").click(function() {
+                $('#chkTimer').prop('checked', false);
+                lastImage = null;
+              
+                var oldImage = popFromBuffer();
+                if (oldImage == null)
+                  return;
+
+                 var canvas = document.getElementById('canvas');
+                var ctx = canvas.getContext('2d');
+                ctx.putImageData(oldImage, 0, 0);
+            });
 
             $("#canvas").click(function() {
                 createImage();
